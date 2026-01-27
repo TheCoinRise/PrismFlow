@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="PrismFlow - A light-bending puzzle game. Guide colored light beams through mirrors and prisms to solve puzzles.">
+    <meta name="theme-color" content="#0a0a0f">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="PrismFlow - Light Puzzle Game">
+    <meta property="og:description" content="Bend light. Solve puzzles. A beautiful light-bending puzzle game with 80 levels.">
+    <meta property="og:image" content="PrismFlowLogo.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PrismFlow - Light Puzzle Game">
+    <meta name="twitter:description" content="Bend light. Solve puzzles. A beautiful light-bending puzzle game.">
+    <meta name="twitter:image" content="PrismFlowLogo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>PrismFlow - Light Puzzle Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="PrismFlowLogo.png">
+    <link rel="apple-touch-icon" href="PrismFlowLogo.png">
+</head>
+<body>
+    <div id="app">
+        <!-- Splash Screen -->
+        <div id="splash-screen" class="screen active">
+            <div class="splash-content">
+                <img src="PrismFlowLogo.png" alt="PrismFlow" class="splash-logo">
+                <div class="splash-loader">
+                    <div class="splash-loader-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="menu-screen" class="screen">
+            <div class="menu-content">
+                <div class="logo">
+                    <img src="PrismFlowLogo.png" alt="PrismFlow" class="logo-image">
+                    <p class="tagline">Bend light. Solve puzzles.</p>
+                </div>
+                <div class="menu-buttons">
+                    <button class="btn btn-primary" onclick="Game.showWorldSelect()">Play</button>
+                    <button class="btn btn-secondary" onclick="Game.showShop()">Shop</button>
+                    <button class="btn btn-secondary" onclick="Game.showLeaderboard()">Leaderboard</button>
+                    <button class="btn btn-secondary" onclick="Game.showHowToPlay()">How to Play</button>
+                    <button class="btn btn-secondary" onclick="Game.showSettings()">Settings</button>
+                </div>
+                <div class="menu-footer">
+                    <p>Created by <a href="https://x.com/thecoinrise" target="_blank">CoinRise</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Play -->
+        <div id="howto-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" onclick="Game.showMenu()">←</button>
+                <h2>How to Play</h2>
+                <div class="spacer"></div>
+            </div>
+            <div class="howto-content">
+                <div class="howto-section">
+                    <h3>Goal</h3>
+                    <p>Guide colored light beams from sources to targets. All targets must receive the correct color to complete the level.</p>
+                </div>
+                <div class="howto-section">
+                    <h3>Controls</h3>
+                    <ul>
+                        <li><strong>Click/tap empty cell:</strong> Place selected piece</li>
+                        <li><strong>Click/tap placed piece:</strong> Rotate it</li>
+                        <li><strong>Right-click or long press:</strong> Remove piece</li>
+                        <li><strong>Click/tap inventory:</strong> Select piece to place</li>
+                    </ul>
+                </div>
+                <div class="howto-section">
+                    <h3>Pieces</h3>
+                    <div class="piece-guide">
+                        <div class="piece-item"><span class="piece-icon">/</span> Mirror - Reflects light</div>
+                        <div class="piece-item"><span class="piece-icon">\</span> Mirror - Reflects light</div>
+                        <div class="piece-item"><span class="piece-icon">△</span> Prism - Splits white into RGB</div>
+                        <div class="piece-item"><span class="piece-icon">◇</span> Combiner - Merges colors</div>
+                        <div class="piece-item"><span class="piece-icon filter-r">R</span> Filter - Only red passes</div>
+                        <div class="piece-item"><span class="piece-icon filter-g">G</span> Filter - Only green passes</div>
+                        <div class="piece-item"><span class="piece-icon filter-b">B</span> Filter - Only blue passes</div>
+                        <div class="piece-item"><span class="piece-icon splitter">┼</span> Splitter - Splits beam into two</div>
+                        <div class="piece-item"><span class="piece-icon portal">⊙</span> Teleporter - Warps light to paired teleporter</div>
+                    </div>
+                </div>
+                <div class="howto-section">
+                    <h3>Color Mixing</h3>
+                    <div class="color-guide">
+                        <div>Red + Green = Yellow</div>
+                        <div>Red + Blue = Magenta</div>
+                        <div>Green + Blue = Cyan</div>
+                        <div>Red + Green + Blue = White</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" onclick="Game.showMenu()">←</button>
+                <h2>Settings</h2>
+                <div class="spacer"></div>
+            </div>
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h3>Profile</h3>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <span class="setting-label">Username</span>
+                            <span class="setting-description">Your name on the leaderboard</span>
+                        </div>
+                        <input type="text" id="username-input" class="username-input" placeholder="Enter name" maxlength="15" onchange="Game.saveUsername()">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Preferences</h3>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <span class="setting-label">Sound Effects</span>
+                            <span class="setting-description">Play sounds during gameplay</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="sound-toggle" onchange="Game.toggleSound()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <span class="setting-label">Vibration</span>
+                            <span class="setting-description">Haptic feedback on interactions</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="vibration-toggle" onchange="Game.toggleVibration()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Progress</h3>
+                    <div class="stats-row">
+                        <span class="stat-label">Total Gems</span>
+                        <span class="stat-value" id="settings-gems">0</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stat-label">Levels Completed</span>
+                        <span class="stat-value" id="settings-levels">0 / 80</span>
+                    </div>
+                    <div class="stats-row">
+                        <span class="stat-label">Total Stars</span>
+                        <span class="stat-value" id="settings-stars">0 / 240</span>
+                    </div>
+                    <button class="btn btn-danger" onclick="Game.confirmReset()">Reset All Progress</button>
+                </div>
+
+                <div class="settings-section">
+                    <h3>About</h3>
+                    <div class="about-row">
+                        <span>Version</span>
+                        <span>3.0.0</span>
+                    </div>
+                    <div class="about-row">
+                        <span>Created by</span>
+                        <a href="https://x.com/thecoinrise" target="_blank">CoinRise</a>
+                    </div>
+                    <div class="about-row">
+                        <span>Built with</span>
+                        <a href="https://factoryapp.dev" target="_blank">App Factory</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop -->
+        <div id="shop-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" onclick="Game.showMenu()">←</button>
+                <h2>Theme Shop</h2>
+                <div class="gem-display"><span id="shop-gems">0</span> 💎</div>
+            </div>
+            <div class="shop-content">
+                <p class="shop-subtitle">Customize your game with unique color themes!</p>
+                <div class="theme-grid" id="theme-grid">
+                    <!-- Themes populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div id="leaderboard-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" onclick="Game.showMenu()">←</button>
+                <h2>Leaderboard</h2>
+                <button class="btn-refresh" onclick="Game.refreshLeaderboard()">↻</button>
+            </div>
+            <div class="leaderboard-content">
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" onclick="Game.switchLeaderboardTab('levels')" id="tab-levels">Most Levels</button>
+                    <button class="tab-btn" onclick="Game.switchLeaderboardTab('stars')" id="tab-stars">Most Stars</button>
+                </div>
+                <div class="leaderboard-list" id="leaderboard-list">
+                    <!-- Leaderboard populated by JS -->
+                </div>
+                <div class="leaderboard-self" id="leaderboard-self">
+                    <!-- User's own rank -->
+                </div>
+            </div>
+        </div>
+
+        <!-- World Select -->
+        <div id="world-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" onclick="Game.showMenu()">←</button>
+                <h2>Select World</h2>
+                <div class="gem-display"><span id="total-gems">0</span> 💎</div>
+            </div>
+            <div class="world-list" id="world-list">
+                <!-- Worlds populated by JS -->
+            </div>
+        </div>
+
+        <!-- Level Select -->
+        <div id="level-screen" class="screen">
+            <div class="screen-header">
+                <button class="btn-back" onclick="Game.showWorldSelect()">←</button>
+                <h2 id="level-screen-title">World 1</h2>
+                <div class="spacer"></div>
+            </div>
+            <div class="level-grid" id="level-grid">
+                <!-- Levels populated by JS -->
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <button class="btn-back" onclick="Game.confirmExit()">←</button>
+                <div class="level-info">
+                    <span id="level-name">Level 1</span>
+                    <span class="moves-display">Moves: <span id="move-count">0</span></span>
+                </div>
+                <button class="btn-reset" onclick="Game.resetLevel()">↺</button>
+            </div>
+            <div class="game-area">
+                <div class="puzzle-container">
+                    <div id="puzzle-grid" class="puzzle-grid">
+                        <!-- Grid cells populated by JS -->
+                    </div>
+                    <svg id="light-beams" class="light-beams"></svg>
+                </div>
+            </div>
+            <div class="inventory-bar" id="inventory-bar">
+                <!-- Inventory populated by JS -->
+            </div>
+        </div>
+
+        <!-- Level Complete Modal -->
+        <div id="complete-modal" class="modal">
+            <div class="modal-content">
+                <h2>Level Complete!</h2>
+                <div class="stars-display" id="stars-display">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <p id="complete-message">Great job!</p>
+                <p class="gems-earned">+<span id="gems-earned">15</span> 💎</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-secondary" onclick="Game.backToLevels()">Levels</button>
+                    <button class="btn btn-primary" onclick="Game.nextLevel()">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirm Exit Modal -->
+        <div id="exit-modal" class="modal">
+            <div class="modal-content">
+                <h2>Exit Level?</h2>
+                <p>Your progress on this level will be lost.</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-secondary" onclick="Game.closeExitModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="Game.exitLevel()">Exit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Progress Modal -->
+        <div id="reset-modal" class="modal">
+            <div class="modal-content">
+                <h2>Reset Progress?</h2>
+                <p>This will delete all your progress, gems, and stars. This action cannot be undone.</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-secondary" onclick="Game.closeResetModal()">Cancel</button>
+                    <button class="btn btn-danger" onclick="Game.resetProgress()">Reset Everything</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Purchase Modal -->
+        <div id="theme-modal" class="modal">
+            <div class="modal-content">
+                <h2 id="theme-modal-title">Unlock Theme?</h2>
+                <div class="theme-preview" id="theme-preview">
+                    <div class="preview-colors">
+                        <span class="preview-color" id="preview-color-1"></span>
+                        <span class="preview-color" id="preview-color-2"></span>
+                        <span class="preview-color" id="preview-color-3"></span>
+                    </div>
+                </div>
+                <p id="theme-modal-cost">Cost: 50 💎</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-secondary" onclick="Game.closeThemeModal()">Cancel</button>
+                    <button class="btn btn-primary" id="theme-buy-btn" onclick="Game.confirmThemePurchase()">Buy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="levels.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
