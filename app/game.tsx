@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGameStore } from '../src/store/gameStore';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { GameBoard } from '../src/components/GameBoard';
 import { InventoryBar } from '../src/components/InventoryBar';
 import { useEffect } from 'react';
@@ -46,7 +47,7 @@ export default function GameScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style="light" />
       
       <View style={styles.header}>
@@ -68,10 +69,12 @@ export default function GameScreen() {
         </TouchableOpacity>
       </View>
 
-      <GameBoard level={currentLevel} />
+      <View style={styles.gameArea}>
+        <GameBoard level={currentLevel} />
+      </View>
 
       <InventoryBar />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -81,13 +84,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#0a0a0f'
   },
   header: {
-    paddingTop: 60,
-    paddingBottom: 15,
+    paddingVertical: 15,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'rgba(0, 0, 0, 0.3)'
+  },
+  gameArea: {
+    flex: 1,
+    minHeight: 0 // Important for flex children
   },
   backButton: {
     padding: 8

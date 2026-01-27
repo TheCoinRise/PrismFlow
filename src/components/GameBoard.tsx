@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useGameStore } from '../store/gameStore';
 import { Level, Position } from '../types/game';
 import { GameCell } from './GameCell';
@@ -8,28 +8,34 @@ interface GameBoardProps {
 }
 
 export function GameBoard({ level }: GameBoardProps) {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const placedPieces = useGameStore((state) => state.placedPieces);
   const selectedPiece = useGameStore((state) => state.selectedPiece);
   const placePiece = useGameStore((state) => state.placePiece);
   const removePiece = useGameStore((state) => state.removePiece);
   const rotatePiece = useGameStore((state) => state.rotatePiece);
 
-  const cellSize = Math.min(
-    (100 / level.gridSize.width) * 0.9,
-    (100 / level.gridSize.height) * 0.9
-  );
+  // Calculate cell size based on available space
+  // Reserve space for header (~100px) and inventory bar (~100px)
+  const availableHeight = screenHeight - 200;
+  const availableWidth = screenWidth - 40; // padding
+  
+  const maxCellWidth = availableWidth / level.gridSize.width;
+  const maxCellHeight = availableHeight / level.gridSize.height;
+  const cellSize = Math.min(maxCellWidth, maxCellHeight, 60); // Max 60px per cell
 
   const handleCellPress = (position: Position) => {
-    if (!selectedPiece) return;
-    
     const key = `${position.x},${position.y}`;
     const existingPiece = placedPieces[key];
     
     if (existingPiece) {
+      // Rotate existing piece
       rotatePiece(position);
-    } else {
+    } else if (selectedPiece) {
+      // Place new piece
       placePiece(position, selectedPiece);
     }
+    // If no piece selected, do nothing (user needs to select from inventory first)
   };
 
   const handleCellLongPress = (position: Position) => {
@@ -41,9 +47,8 @@ export function GameBoard({ level }: GameBoardProps) {
       <View style={[
         styles.grid,
         {
-          width: `${cellSize * level.gridSize.width}%`,
-          height: `${cellSize * level.gridSize.height}%`,
-          aspectRatio: level.gridSize.width / level.gridSize.height
+          width: cellSize * level.gridSize.width,
+          height: cellSize * level.gridSize.height
         }
       ]}>
         {Array.from({ length: level.gridSize.height }).map((_, row) =>
@@ -69,6 +74,7 @@ export function GameBoard({ level }: GameBoardProps) {
                 isLocked={isLocked}
                 source={source}
                 target={target}
+                cellSize={cellSize}
                 onPress={handleCellPress}
                 onLongPress={handleCellLongPress}
               />
@@ -93,6 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: 'rgba(0, 212, 255, 0.3)'
+    borderColor: 'rgba(0, 212, 255, 0.3)',
+    overflow: 'hidden'
   }
 });
