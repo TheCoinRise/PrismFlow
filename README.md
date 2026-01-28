@@ -1,4 +1,4 @@
-# PrismFlow Mobile
+# PrismFlow - Build with <a href="https://factoryapp.dev">App $Factory</a>
 
 A React Native mobile app port of the PrismFlow web game - a light-bending puzzle game for iOS and Android.
 
