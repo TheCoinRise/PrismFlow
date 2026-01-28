@@ -8,7 +8,7 @@ Web version LIVE - iOS and Android apps comming soon...
 
 ## Overview
 
-PrismFlow Mobile is a premium puzzle game with 80 levels across 8 worlds. Guide colored light beams through mirrors, prisms, filters, and other optical elements to solve puzzles.
+PrismFlow is a premium puzzle game with 80 levels across 8 worlds. Guide colored light beams through mirrors, prisms, filters, and other optical elements to solve puzzles.
 
 ## Features
 
