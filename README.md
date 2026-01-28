@@ -1,4 +1,6 @@
-# PrismFlow - Build with <a href="https://factoryapp.dev" target="_blank">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
+# Prism Flow - Build with <a href="https://factoryapp.dev" target="_blank">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
+
+<h2>$PRISMFLOW</h2>
 
 <img width="256" height="256" alt="PrismFlowLogo" src="https://github.com/TheCoinRise/PrismFlow/blob/main/assets/PrismFlowLogo.png" />
 
