@@ -1,4 +1,9 @@
-# PrismFlow - Build with <a href="https://factoryapp.dev" target="_blank">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
+# Prism Flow - Build with <a href="https://factoryapp.dev" target="_blank">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
+
+<h2>$PRISMFLOW</h2>
+
+<img width="256" height="256" alt="PrismFlowLogo" src="https://github.com/TheCoinRise/PrismFlow/blob/main/assets/PrismFlowLogo.png" />
+
 
 A React Native mobile app - a light-bending puzzle game for iOS and Android.
 
@@ -8,7 +13,10 @@ Web version LIVE - iOS and Android apps comming soon...
 
 ## Overview
 
-PrismFlow is a premium puzzle game with 80 levels across 8 worlds. Guide colored light beams through mirrors, prisms, filters, and other optical elements to solve puzzles.
+Prism Flow is a vibrant, physics-based light puzzle adventure where players bend, split, and guide beams of colorful light through a series of increasingly clever challenges in 80 levels across 8 worlds. Tap, rotate, and place optical elements like prisms and mirrors to connect light sources to targets and unlock new levels, effects, and visual surprises. With neon-bright graphics, smooth mechanics, and soothing audio, Prism Flow combines relaxing gameplay with brain-teasing twists — perfect for quick sessions or thoughtful play. 
+
+Built with App $Factory by CoinRise, every level feels like solving a prism-powered masterpiece of color and strategy.
+
 
 ## Features
 
