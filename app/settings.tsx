@@ -161,6 +161,14 @@ export default function SettingsScreen() {
               <Text style={styles.link}>App Factory</Text>
             </TouchableOpacity>
           </View>
+          <View style={styles.linkRow}>
+            <TouchableOpacity onPress={() => openLink('https://bags.fm/4bAZT6uaQobvf5EBw4fvcPivmHQpX6wFeMnBAQCbBAGS')}>
+              <Text style={styles.link}>$PrismFlow on Bags.fm</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.aboutText}>
+            4bAZT6uaQobvf5EBw4fvcPivmHQpX6wFeMnBAQCbBAGS
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
