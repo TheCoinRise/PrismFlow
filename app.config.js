@@ -43,6 +43,9 @@ export default {
   scheme: "prismflow",
   extra: {
     revenueCatApiKeyIOS: process.env.REVENUECAT_API_KEY_IOS || "",
-    revenueCatApiKeyAndroid: process.env.REVENUECAT_API_KEY_ANDROID || ""
+    revenueCatApiKeyAndroid: process.env.REVENUECAT_API_KEY_ANDROID || "",
+    eas: {
+      projectId: "1644b03b-e775-41c4-b25f-dae2adaba0cd"
+    }
   }
 };
