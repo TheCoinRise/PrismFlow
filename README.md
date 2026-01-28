@@ -1,5 +1,8 @@
 # PrismFlow - Build with <a href="https://factoryapp.dev" target="_blank">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
 
+<img width="1024" height="1024" alt="PrismFlowLogo" src="https://github.com/TheCoinRise/PrismFlow/blob/main/assets/PrismFlowLogo.png" />
+
+
 A React Native mobile app - a light-bending puzzle game for iOS and Android.
 
 Web version LIVE - iOS and Android apps comming soon...
