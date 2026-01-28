@@ -1,6 +1,8 @@
-# PrismFlow - Build with <a href="https://factoryapp.dev">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
+# PrismFlow - Build with <a href="https://factoryapp.dev" target="_blank">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
 
 A React Native mobile app port of the PrismFlow web game - a light-bending puzzle game for iOS and Android.
+
+<a href="https://x.com/prismflowgame" target="_blank">X Updates @PrismFlowGame</a>
 
 ## Overview
 
