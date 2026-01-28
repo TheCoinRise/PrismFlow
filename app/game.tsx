@@ -5,18 +5,26 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GameBoard } from '../src/components/GameBoard';
 import { InventoryBar } from '../src/components/InventoryBar';
-import { useEffect } from 'react';
+import { LevelCompleteModal } from '../src/components/LevelCompleteModal';
+import { useEffect, useState } from 'react';
 import { LightEngine } from '../src/utils/lightEngine';
+import { getLevelById, getLevelsByWorld } from '../src/data/levels';
 
 export default function GameScreen() {
   const router = useRouter();
   const currentLevel = useGameStore((state) => state.currentLevel);
+  const currentWorld = useGameStore((state) => state.currentWorld);
   const moveCount = useGameStore((state) => state.moveCount);
   const placedPieces = useGameStore((state) => state.placedPieces);
+  const progress = useGameStore((state) => state.progress);
   const setLightBeams = useGameStore((state) => state.setLightBeams);
   const setTargetStates = useGameStore((state) => state.setTargetStates);
   const resetLevel = useGameStore((state) => state.resetLevel);
   const completeLevel = useGameStore((state) => state.completeLevel);
+  const setCurrentLevel = useGameStore((state) => state.setCurrentLevel);
+  
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [completedStars, setCompletedStars] = useState(0);
 
   useEffect(() => {
     if (!currentLevel) {
@@ -24,23 +32,56 @@ export default function GameScreen() {
       return;
     }
 
-    // Calculate light beams and target states
-    const result = LightEngine.calculate(currentLevel, placedPieces);
-    setLightBeams(result.beams);
-    setTargetStates(result.targetStates);
+    // Calculate light beams and target states whenever pieces change
+    try {
+      const result = LightEngine.calculate(currentLevel, placedPieces);
+      setLightBeams(result.beams || []);
+      setTargetStates(result.targetStates || {});
 
-    // Check if level is complete
-    const allSatisfied = Object.values(result.targetStates).every(
-      state => state.satisfied
-    );
-    if (allSatisfied && Object.keys(placedPieces).length > 0) {
-      completeLevel(moveCount);
-      // Show completion screen
-      setTimeout(() => {
-        router.replace('/level-select');
-      }, 2000);
+      // Check if level is complete
+      const targetIds = currentLevel.targets.map(t => t.id);
+      const allSatisfied = targetIds.length > 0 && targetIds.every(
+        id => result.targetStates[id]?.satisfied === true
+      );
+      
+      if (allSatisfied && Object.keys(placedPieces).length > 0 && !showCompleteModal) {
+        // Calculate stars
+        const stars = moveCount <= currentLevel.parMoves ? 3 : 
+                      moveCount <= currentLevel.parMoves * 1.5 ? 2 : 1;
+        setCompletedStars(stars);
+        completeLevel(moveCount);
+        setShowCompleteModal(true);
+      }
+    } catch (error) {
+      console.error('Light engine error:', error);
+      setLightBeams([]);
+      setTargetStates({});
     }
-  }, [currentLevel, placedPieces, moveCount]);
+  }, [currentLevel, placedPieces, moveCount, showCompleteModal]);
+
+  const handleNextLevel = () => {
+    if (!currentLevel || !currentWorld) {
+      router.replace('/level-select');
+      return;
+    }
+
+    const levels = getLevelsByWorld(currentWorld.id);
+    const currentIndex = levels.findIndex(l => l.id === currentLevel.id);
+    
+    if (currentIndex < levels.length - 1) {
+      const nextLevel = levels[currentIndex + 1];
+      setCurrentLevel(nextLevel);
+      setShowCompleteModal(false);
+    } else {
+      // No more levels in this world
+      router.replace('/level-select');
+    }
+  };
+
+  const handleMenu = () => {
+    setShowCompleteModal(false);
+    router.replace('/menu');
+  };
 
   if (!currentLevel) {
     return null;
@@ -74,6 +115,15 @@ export default function GameScreen() {
       </View>
 
       <InventoryBar />
+
+      <LevelCompleteModal
+        visible={showCompleteModal}
+        level={currentLevel}
+        moveCount={moveCount}
+        stars={completedStars}
+        onNext={handleNextLevel}
+        onMenu={handleMenu}
+      />
     </SafeAreaView>
   );
 }

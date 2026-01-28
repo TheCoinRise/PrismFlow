@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { PieceIcon } from '../src/components/PieceIcon';
+import { PieceType } from '../src/types/game';
 
 export default function HowToPlayScreen() {
   const router = useRouter();
@@ -39,15 +41,44 @@ export default function HowToPlayScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Pieces</Text>
-          <Text style={styles.sectionText}>
-            • Mirror (/): Reflects light{'\n'}
-            • Mirror (\\): Reflects light{'\n'}
-            • Prism: Splits white into RGB{'\n'}
-            • Combiner: Merges colors{'\n'}
-            • Filter (R/G/B): Only that color passes{'\n'}
-            • Splitter: Splits beam into two{'\n'}
-            • Teleporter: Warps light to paired teleporter
-          </Text>
+          <View style={styles.piecesList}>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.MIRROR_FORWARD} size={30} />
+              <Text style={styles.pieceText}>Mirror (/): Reflects light</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.MIRROR_BACKWARD} size={30} />
+              <Text style={styles.pieceText}>Mirror (\): Reflects light</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.PRISM} size={30} />
+              <Text style={styles.pieceText}>Prism: Splits white into RGB</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.COMBINER} size={30} />
+              <Text style={styles.pieceText}>Combiner: Merges colors</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.FILTER_RED} size={30} />
+              <Text style={styles.pieceText}>Filter (R): Only red passes</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.FILTER_GREEN} size={30} />
+              <Text style={styles.pieceText}>Filter (G): Only green passes</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.FILTER_BLUE} size={30} />
+              <Text style={styles.pieceText}>Filter (B): Only blue passes</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.SPLITTER} size={30} />
+              <Text style={styles.pieceText}>Splitter: Splits beam into two</Text>
+            </View>
+            <View style={styles.pieceItem}>
+              <PieceIcon type={PieceType.TELEPORTER} size={30} />
+              <Text style={styles.pieceText}>Teleporter: Warps light to paired teleporter</Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.section}>
@@ -109,5 +140,19 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     lineHeight: 24
+  },
+  piecesList: {
+    gap: 12
+  },
+  pieceItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15,
+    paddingVertical: 8
+  },
+  pieceText: {
+    color: '#fff',
+    fontSize: 16,
+    flex: 1
   }
 });

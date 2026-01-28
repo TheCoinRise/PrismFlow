@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useGameStore } from '../store/gameStore';
 import { Position, Piece, Source, Target, Direction } from '../types/game';
 import { PieceIcon } from './PieceIcon';
 
@@ -23,6 +24,8 @@ export function GameCell({
   onPress,
   onLongPress
 }: GameCellProps) {
+  const targetStates = useGameStore((state) => state.targetStates);
+
   const handlePress = () => {
     onPress(position);
   };
@@ -45,6 +48,9 @@ export function GameCell({
         return '→';
     }
   };
+
+  // Check if target is satisfied
+  const targetSatisfied = target ? targetStates[target.id]?.satisfied : false;
 
   return (
     <TouchableOpacity
@@ -75,11 +81,17 @@ export function GameCell({
       )}
       
       {target && (
-        <View style={styles.targetIndicator}>
+        <View style={[
+          styles.targetIndicator,
+          targetSatisfied && styles.targetSatisfied
+        ]}>
           <View style={[
             styles.targetColor,
             { backgroundColor: `rgb(${target.requiredColor.r}, ${target.requiredColor.g}, ${target.requiredColor.b})` }
           ]} />
+          {targetSatisfied && (
+            <Text style={styles.checkmark}>✓</Text>
+          )}
         </View>
       )}
       
@@ -143,6 +155,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 2
+  },
+  targetSatisfied: {
+    borderColor: '#00ff00',
+    borderWidth: 3,
+    shadowColor: '#00ff00',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  checkmark: {
+    position: 'absolute',
+    color: '#00ff00',
+    fontSize: 14,
+    fontWeight: 'bold'
   },
   targetColor: {
     width: '100%',

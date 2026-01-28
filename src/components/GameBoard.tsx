@@ -2,6 +2,7 @@ import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useGameStore } from '../store/gameStore';
 import { Level, Position } from '../types/game';
 import { GameCell } from './GameCell';
+import { LightBeams } from './LightBeam';
 
 interface GameBoardProps {
   level: Level;
@@ -10,6 +11,7 @@ interface GameBoardProps {
 export function GameBoard({ level }: GameBoardProps) {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const placedPieces = useGameStore((state) => state.placedPieces);
+  const lightBeams = useGameStore((state) => state.lightBeams);
   const selectedPiece = useGameStore((state) => state.selectedPiece);
   const placePiece = useGameStore((state) => state.placePiece);
   const removePiece = useGameStore((state) => state.removePiece);
@@ -45,42 +47,61 @@ export function GameBoard({ level }: GameBoardProps) {
   return (
     <View style={styles.container}>
       <View style={[
-        styles.grid,
+        styles.gridContainer,
         {
           width: cellSize * level.gridSize.width,
           height: cellSize * level.gridSize.height
         }
       ]}>
-        {Array.from({ length: level.gridSize.height }).map((_, row) =>
-          Array.from({ length: level.gridSize.width }).map((_, col) => {
-            const position: Position = { x: col, y: row };
-            const key = `${col},${row}`;
-            const piece = placedPieces[key];
-            const isLocked = level.lockedCells.some(
-              c => c.x === col && c.y === row
-            );
-            const source = level.sources.find(
-              s => s.position.x === col && s.position.y === row
-            );
-            const target = level.targets.find(
-              t => t.position.x === col && t.position.y === row
-            );
+        {/* Render light beams first (behind cells) */}
+        <View style={styles.beamsLayer} pointerEvents="none">
+          <LightBeams
+            beams={lightBeams || []}
+            cellSize={cellSize}
+            gridWidth={level.gridSize.width}
+            gridHeight={level.gridSize.height}
+          />
+        </View>
 
-            return (
-              <GameCell
-                key={key}
-                position={position}
-                piece={piece}
-                isLocked={isLocked}
-                source={source}
-                target={target}
-                cellSize={cellSize}
-                onPress={handleCellPress}
-                onLongPress={handleCellLongPress}
-              />
-            );
-          })
-        )}
+        {/* Render grid cells */}
+        <View style={[
+          styles.grid,
+          {
+            width: cellSize * level.gridSize.width,
+            height: cellSize * level.gridSize.height
+          }
+        ]}>
+          {Array.from({ length: level.gridSize.height }).map((_, row) =>
+            Array.from({ length: level.gridSize.width }).map((_, col) => {
+              const position: Position = { x: col, y: row };
+              const key = `${col},${row}`;
+              const piece = placedPieces[key];
+              const isLocked = level.lockedCells.some(
+                c => c.x === col && c.y === row
+              );
+              const source = level.sources.find(
+                s => s.position.x === col && s.position.y === row
+              );
+              const target = level.targets.find(
+                t => t.position.x === col && t.position.y === row
+              );
+
+              return (
+                <GameCell
+                  key={key}
+                  position={position}
+                  piece={piece}
+                  isLocked={isLocked}
+                  source={source}
+                  target={target}
+                  cellSize={cellSize}
+                  onPress={handleCellPress}
+                  onLongPress={handleCellLongPress}
+                />
+              );
+            })
+          )}
+        </View>
       </View>
     </View>
   );
@@ -93,13 +114,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20
   },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  gridContainer: {
+    position: 'relative',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 8,
     borderWidth: 2,
     borderColor: 'rgba(0, 212, 255, 0.3)',
     overflow: 'hidden'
+  },
+  beamsLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    zIndex: 2
   }
 });
