@@ -2,6 +2,8 @@
 
 A React Native mobile app port of the PrismFlow web game - a light-bending puzzle game for iOS and Android.
 
+<a href="https//coinrise.info/prismflow" target="_blank">Web version LIVE</a> - iOS and Android apps comming soon...
+
 <a href="https://x.com/prismflowgame" target="_blank">X Updates @PrismFlowGame</a>
 
 ## Overview
