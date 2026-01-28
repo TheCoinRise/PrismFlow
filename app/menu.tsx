@@ -2,13 +2,17 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGameStore } from '../src/store/gameStore';
 import { StatusBar } from 'expo-status-bar';
+import { getThemeColors } from '../src/utils/themes';
 
 export default function MenuScreen() {
   const router = useRouter();
   const gems = useGameStore((state) => state.gems);
+  const currentTheme = useGameStore((state) => state.currentTheme);
+
+  const colors = getThemeColors(currentTheme);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar style="light" />
       
       <View style={styles.content}>
@@ -18,44 +22,88 @@ export default function MenuScreen() {
             style={styles.logo}
             resizeMode="contain"
           />
-          <Text style={styles.tagline}>Bend light. Solve puzzles.</Text>
+          <Text style={[styles.tagline, { color: colors.text }]}>
+            Bend light. Solve puzzles.
+          </Text>
         </View>
 
-        <View style={styles.gemsBar}>
-          <Text style={styles.gemsText}>💎 {gems}</Text>
+        <View
+          style={[
+            styles.gemsBar,
+            {
+              backgroundColor: colors.card,
+              borderColor: colors.accent
+            }
+          ]}
+        >
+          <Text style={[styles.gemsText, { color: colors.accent }]}>
+            💎 {gems}
+          </Text>
         </View>
 
         <View style={styles.menuButtons}>
           <TouchableOpacity
-            style={[styles.button, styles.primaryButton]}
+            style={[
+              styles.button,
+              styles.primaryButton,
+              { backgroundColor: colors.accent }
+            ]}
             onPress={() => router.push('/world-select')}
           >
             <Text style={styles.buttonText}>Play</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.secondaryButton]}
+            style={[
+              styles.button,
+              styles.secondaryButton,
+              {
+                borderColor: colors.accentSecondary,
+                backgroundColor: 'rgba(255,255,255,0.02)'
+              }
+            ]}
             onPress={() => router.push('/shop')}
           >
             <Text style={styles.buttonText}>Shop</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.secondaryButton]}
+            style={[
+              styles.button,
+              styles.secondaryButton,
+              {
+                borderColor: colors.accentSecondary,
+                backgroundColor: 'rgba(255,255,255,0.02)'
+              }
+            ]}
             onPress={() => router.push('/leaderboard')}
           >
             <Text style={styles.buttonText}>Leaderboard</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.secondaryButton]}
+            style={[
+              styles.button,
+              styles.secondaryButton,
+              {
+                borderColor: colors.accentSecondary,
+                backgroundColor: 'rgba(255,255,255,0.02)'
+              }
+            ]}
             onPress={() => router.push('/how-to-play')}
           >
             <Text style={styles.buttonText}>How to Play</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.secondaryButton]}
+            style={[
+              styles.button,
+              styles.secondaryButton,
+              {
+                borderColor: colors.accentSecondary,
+                backgroundColor: 'rgba(255,255,255,0.02)'
+              }
+            ]}
             onPress={() => router.push('/settings')}
           >
             <Text style={styles.buttonText}>Settings</Text>
@@ -63,9 +111,11 @@ export default function MenuScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>
+          <Text style={[styles.footerText, { color: colors.mutedText }]}>
             Created by{' '}
-            <Text style={styles.link}>CoinRise</Text>
+            <Text style={[styles.link, { color: colors.accent }]}>
+              CoinRise
+            </Text>
           </Text>
         </View>
       </View>
@@ -75,8 +125,7 @@ export default function MenuScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#0a0a0f'
+    flex: 1
   },
   content: {
     flex: 1,
@@ -94,7 +143,6 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   tagline: {
-    color: '#fff',
     fontSize: 18,
     fontWeight: '300',
     letterSpacing: 1
@@ -103,13 +151,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: 'rgba(0, 212, 255, 0.1)',
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(0, 212, 255, 0.3)'
+    borderWidth: 1
   },
   gemsText: {
-    color: '#00d4ff',
     fontSize: 18,
     fontWeight: '600'
   },
@@ -148,11 +193,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   footerText: {
-    color: 'rgba(255, 255, 255, 0.5)',
     fontSize: 14
   },
   link: {
-    color: '#00d4ff',
     fontWeight: '600'
   }
 });

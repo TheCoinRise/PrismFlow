@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Level, Piece, Position, World } from '../types/game';
+import { ThemeId } from '../utils/themes';
 
 interface GameState {
   // Current game state
@@ -31,8 +32,8 @@ interface GameState {
   };
   
   // Themes
-  currentTheme: string;
-  unlockedThemes: string[];
+  currentTheme: ThemeId;
+  unlockedThemes: ThemeId[];
   
   // Actions
   setScreen: (screen: GameState['currentScreen']) => void;
@@ -47,8 +48,9 @@ interface GameState {
   completeLevel: (moveCount: number) => void;
   addGems: (amount: number) => void;
   updateSettings: (settings: Partial<GameState['settings']>) => void;
-  unlockTheme: (themeId: string) => void;
-  setTheme: (themeId: string) => void;
+  unlockTheme: (themeId: ThemeId) => void;
+  setTheme: (themeId: ThemeId) => void;
+  purchaseTheme: (themeId: ThemeId, cost: number) => boolean;
   setLightBeams: (beams: any[]) => void;
   setTargetStates: (states: Record<string, any>) => void;
   loadProgress: () => Promise<void>;
@@ -250,11 +252,46 @@ export const useGameStore = create<GameState>((set, get) => ({
     settings: { ...state.settings, ...newSettings }
   })),
   
-  unlockTheme: (themeId) => set((state) => ({
-    unlockedThemes: [...state.unlockedThemes, themeId]
-  })),
+  unlockTheme: (themeId) => set((state) => {
+    if (state.unlockedThemes.includes(themeId)) {
+      return state;
+    }
+    return {
+      unlockedThemes: [...state.unlockedThemes, themeId]
+    };
+  }),
   
-  setTheme: (themeId) => set({ currentTheme: themeId }),
+  setTheme: (themeId) => {
+    const { unlockedThemes } = get();
+    if (!unlockedThemes.includes(themeId)) return;
+    set({ currentTheme: themeId });
+    // Persist theme change
+    get().saveProgress();
+  },
+
+  purchaseTheme: (themeId, cost) => {
+    const { gems, unlockedThemes } = get();
+    if (unlockedThemes.includes(themeId)) {
+      // Already unlocked; treat as no-op
+      return false;
+    }
+    if (gems < cost) {
+      // Not enough gems
+      return false;
+    }
+
+    const newGems = gems - cost;
+    const newUnlocked = [...unlockedThemes, themeId];
+
+    set({
+      gems: newGems,
+      unlockedThemes: newUnlocked,
+      currentTheme: themeId
+    });
+
+    get().saveProgress();
+    return true;
+  },
   
   setLightBeams: (beams) => set({ lightBeams: beams }),
   

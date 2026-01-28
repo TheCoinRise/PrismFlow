@@ -9,6 +9,7 @@ import { LevelCompleteModal } from '../src/components/LevelCompleteModal';
 import { useEffect, useState } from 'react';
 import { LightEngine } from '../src/utils/lightEngine';
 import { getLevelById, getLevelsByWorld } from '../src/data/levels';
+import { getThemeColors } from '../src/utils/themes';
 
 export default function GameScreen() {
   const router = useRouter();
@@ -22,6 +23,9 @@ export default function GameScreen() {
   const resetLevel = useGameStore((state) => state.resetLevel);
   const completeLevel = useGameStore((state) => state.completeLevel);
   const setCurrentLevel = useGameStore((state) => state.setCurrentLevel);
+  const currentTheme = useGameStore((state) => state.currentTheme);
+
+  const colors = getThemeColors(currentTheme);
   
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [completedStars, setCompletedStars] = useState(0);
@@ -88,25 +92,33 @@ export default function GameScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <StatusBar style="light" />
       
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: 'rgba(0, 0, 0, 0.3)' }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Text style={[styles.backButtonText, { color: colors.accent }]}>
+            ←
+          </Text>
         </TouchableOpacity>
         <View style={styles.headerInfo}>
-          <Text style={styles.levelName}>{currentLevel.name}</Text>
-          <Text style={styles.moveCount}>Moves: {moveCount}</Text>
+          <Text style={[styles.levelName, { color: colors.text }]}>
+            {currentLevel.name}
+          </Text>
+          <Text style={[styles.moveCount, { color: colors.mutedText }]}>
+            Moves: {moveCount}
+          </Text>
         </View>
         <TouchableOpacity
           style={styles.resetButton}
           onPress={resetLevel}
         >
-          <Text style={styles.resetButtonText}>↻</Text>
+          <Text style={[styles.resetButtonText, { color: colors.danger }]}>
+            ↻
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -130,16 +142,14 @@ export default function GameScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#0a0a0f'
+    flex: 1
   },
   header: {
     paddingVertical: 15,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)'
+    justifyContent: 'space-between'
   },
   gameArea: {
     flex: 1,
@@ -149,7 +159,6 @@ const styles = StyleSheet.create({
     padding: 8
   },
   backButtonText: {
-    color: '#00d4ff',
     fontSize: 24,
     fontWeight: '600'
   },
@@ -158,20 +167,17 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   levelName: {
-    color: '#fff',
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 4
   },
   moveCount: {
-    color: 'rgba(255, 255, 255, 0.6)',
     fontSize: 14
   },
   resetButton: {
     padding: 8
   },
   resetButtonText: {
-    color: '#ff6b35',
     fontSize: 24,
     fontWeight: '600'
   }
