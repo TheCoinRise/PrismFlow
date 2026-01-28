@@ -1,6 +1,6 @@
 # PrismFlow - Build with <a href="https://factoryapp.dev" target="_blank">App $Factory</a> by <a href="https://x.com/thecoinrise">CoinRise</a>
 
-A React Native mobile app port of the PrismFlow web game - a light-bending puzzle game for iOS and Android.
+A React Native mobile app - a light-bending puzzle game for iOS and Android.
 
 Web version LIVE - iOS and Android apps comming soon...
 
@@ -8,7 +8,7 @@ Web version LIVE - iOS and Android apps comming soon...
 
 ## Overview
 
-PrismFlow Mobile is a complete port of the web version with all 80 levels across 8 worlds. Guide colored light beams through mirrors, prisms, filters, and other optical elements to solve puzzles.
+PrismFlow Mobile is a premium puzzle game with 80 levels across 8 worlds. Guide colored light beams through mirrors, prisms, filters, and other optical elements to solve puzzles.
 
 ## Features
 
