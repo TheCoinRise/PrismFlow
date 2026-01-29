@@ -44,7 +44,8 @@ export default {
   extra: {
     revenueCatApiKeyIOS: process.env.REVENUECAT_API_KEY_IOS || "",
     revenueCatApiKeyAndroid: process.env.REVENUECAT_API_KEY_ANDROID || "",
-    leaderboardApiUrl: process.env.LEADERBOARD_API_URL || "https://your-leaderboard-api.com",
+    leaderboardApiUrl: process.env.LEADERBOARD_API_URL || "https://your-project.supabase.co",
+    supabaseAnonKey: process.env.SUPABASE_ANON_KEY || "",
     eas: {
       projectId: "1644b03b-e775-41c4-b25f-dae2adaba0cd"
     }
