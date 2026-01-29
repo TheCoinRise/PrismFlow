@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Level, Piece, Position, World } from '../types/game';
+import { leaderboardAPI } from '../utils/leaderboardApi';
 import { ThemeId } from '../utils/themes';
 
 interface GameState {
@@ -244,6 +245,20 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
     
     get().saveProgress();
+    
+    // Submit score to global leaderboard (async, non-blocking)
+    const { settings } = get();
+    if (settings.username) {
+      leaderboardAPI.submitScore({
+        username: settings.username,
+        levelId,
+        moveCount,
+        stars,
+        gemsEarned
+      }).catch(err => {
+        console.error('Failed to submit score to leaderboard:', err);
+      });
+    }
   },
   
   addGems: (amount) => set((state) => ({ gems: state.gems + amount })),
